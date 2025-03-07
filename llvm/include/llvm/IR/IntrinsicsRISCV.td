@@ -1876,6 +1876,8 @@ let TargetPrefix = "riscv" in {
   // Zvksh
   def int_riscv_vsm3c    : RISCVBinaryAAXUnMaskedZvk<IsVI=1>;
   def int_riscv_vsm3me   : RISCVBinaryAAXUnMasked;
+
+  def int_riscv_pause : Intrinsic<[]>;
 } // TargetPrefix = "riscv"
 
 // Vendor extensions

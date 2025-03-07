@@ -23604,6 +23604,10 @@ Value *CodeGenFunction::EmitRISCVBuiltinExpr(unsigned BuiltinID,
 
     return Store;
   }
+  // Zihintpause
+  case RISCV::BI__builtin_riscv_pause: 
+    ID = Intrinsic::riscv_pause;
+    break;
   // XCValu
   case RISCV::BI__builtin_riscv_cv_alu_addN:
     ID = Intrinsic::riscv_cv_alu_addN;
