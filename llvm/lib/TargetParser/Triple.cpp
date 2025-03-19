@@ -65,6 +65,7 @@ StringRef Triple::getArchTypeName(ArchType Kind) {
   case riscv64:        return "riscv64";
   case shave:          return "shave";
   case sparc:          return "sparc";
+  case ember:          return "ember";
   case sparcel:        return "sparcel";
   case sparcv9:        return "sparcv9";
   case spir64:         return "spir64";
@@ -225,6 +226,8 @@ StringRef Triple::getArchTypePrefix(ArchType Kind) {
 
   case spir:
   case spir64:      return "spir";
+
+  case ember:       return "ember";
 
   case spirv:
   case spirv32:
@@ -471,6 +474,7 @@ Triple::ArchType Triple::getArchTypeForLLVMName(StringRef Name) {
     .Case("spir", spir)
     .Case("spir64", spir64)
     .Case("spirv", spirv)
+    .Case("ember", ember)
     .Case("spirv32", spirv32)
     .Case("spirv64", spirv64)
     .Case("kalimba", kalimba)
@@ -623,6 +627,7 @@ static Triple::ArchType parseArch(StringRef ArchName) {
           .Case("renderscript64", Triple::renderscript64)
           .Case("shave", Triple::shave)
           .Case("ve", Triple::ve)
+          .Case("ember", Triple::ember)
           .Case("wasm32", Triple::wasm32)
           .Case("wasm64", Triple::wasm64)
           .Case("csky", Triple::csky)
@@ -1669,6 +1674,7 @@ unsigned Triple::getArchPointerBitWidth(llvm::Triple::ArchType Arch) {
   case llvm::Triple::renderscript32:
   case llvm::Triple::riscv32:
   case llvm::Triple::shave:
+  case llvm::Triple::ember:
   case llvm::Triple::sparc:
   case llvm::Triple::sparcel:
   case llvm::Triple::spir:
@@ -1784,6 +1790,7 @@ Triple Triple::get32BitArchVariant() const {
   case Triple::spir:
   case Triple::spirv32:
   case Triple::tce:
+  case Triple::ember:
   case Triple::tcele:
   case Triple::thumb:
   case Triple::thumbeb:
@@ -1931,6 +1938,7 @@ Triple Triple::getBigEndianArchVariant() const {
   case Triple::spir64:
   case Triple::spir:
   case Triple::spirv:
+  case Triple::ember:
   case Triple::spirv32:
   case Triple::spirv64:
   case Triple::wasm32:
@@ -2038,6 +2046,7 @@ bool Triple::isLittleEndian() const {
   case Triple::sparcel:
   case Triple::spir64:
   case Triple::spir:
+  case Triple::ember:
   case Triple::spirv:
   case Triple::spirv32:
   case Triple::spirv64:
