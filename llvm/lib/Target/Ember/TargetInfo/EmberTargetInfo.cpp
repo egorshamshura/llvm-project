@@ -4,14 +4,22 @@
 
 using namespace llvm;
 
-Target &llvm::getTheEmberTarget() {
+Target &llvm::getTheEmber32Target() {
 EMBER_DUMP_YELLOW
-static Target TheEmberTarget;
-return TheEmberTarget;
+static Target TheEmber32Target;
+return TheEmber32Target;
+}
+
+Target &llvm::getTheEmber64Target() {
+EMBER_DUMP_YELLOW
+static Target TheEmber64Target;
+return TheEmber64Target;
 }
 
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeEmberTargetInfo() {
 EMBER_DUMP_YELLOW
-RegisterTarget<Triple::ember> X(getTheEmberTarget(), "ember",
-                                "Target for LLVM course", "Ember");
+RegisterTarget<Triple::ember> X(getTheEmber32Target(), "ember32",
+                                "Target for LLVM course 32-bit", "Ember32");
+RegisterTarget<Triple::ember> Y(getTheEmber64Target(), "ember64",
+                                "Target for LLVM course 64-bit", "Ember64");
 }

@@ -5,7 +5,8 @@ namespace llvm {
 
 class Target;
 
-Target &getTheEmberTarget();
+Target &getTheEmber32Target();
+Target &getTheEmber64Target();
 
 } // end namespace llvm
 

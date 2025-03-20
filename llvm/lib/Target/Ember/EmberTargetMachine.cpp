@@ -9,7 +9,8 @@ using namespace llvm;
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeEmberTarget() {
 // Register the target.
 EMBER_DUMP_CYAN
-RegisterTargetMachine<EmberTargetMachine> A(getTheEmberTarget());
+RegisterTargetMachine<EmberTargetMachine> A(getTheEmber32Target());
+RegisterTargetMachine<EmberTargetMachine> B(getTheEmber64Target());
 }
 
 EmberTargetMachine::EmberTargetMachine(const Target &T, const Triple &TT,
