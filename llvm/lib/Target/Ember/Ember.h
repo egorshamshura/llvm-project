@@ -1,6 +1,7 @@
 #ifndef LLVM_LIB_TARGET_Ember_Ember_H
 #define LLVM_LIB_TARGET_Ember_Ember_H
 
+#include "MCTargetDesc/EmberMCTargetDesc.h"
 #include "llvm/Support/raw_ostream.h"
 
 #define EMBER_DUMP(Color)                                                        \
@@ -16,5 +17,6 @@
 #define EMBER_DUMP_YELLOW EMBER_DUMP(llvm::raw_ostream::YELLOW)
 #define EMBER_DUMP_CYAN EMBER_DUMP(llvm::raw_ostream::CYAN)
 #define EMBER_DUMP_MAGENTA EMBER_DUMP(llvm::raw_ostream::MAGENTA)
+#define EMBER_DUMP_WHITE EMBER_DUMP(llvm::raw_ostream::WHITE)
 
 #endif // LLVM_LIB_TARGET_Ember_Ember_H

@@ -18,8 +18,8 @@ return TheEmber64Target;
 
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeEmberTargetInfo() {
 EMBER_DUMP_YELLOW
-RegisterTarget<Triple::ember> X(getTheEmber32Target(), "ember32",
+RegisterTarget<Triple::ember32> X(getTheEmber32Target(), "ember32",
                                 "Target for LLVM course 32-bit", "Ember32");
-RegisterTarget<Triple::ember> Y(getTheEmber64Target(), "ember64",
+RegisterTarget<Triple::ember64> Y(getTheEmber64Target(), "ember64",
                                 "Target for LLVM course 64-bit", "Ember64");
 }
