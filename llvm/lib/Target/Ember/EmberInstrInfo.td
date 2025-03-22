@@ -21,7 +21,21 @@ class SImmAsmOperand<int width> : AsmOperandClass {
   let DiagnosticType = !strconcat("Invalid", Name);
 }
 
-def simm16 : Operand<i32>, ImmLeaf<i32, [{return isInt<16>(Imm);}]> {
+def simm8 : Operand<i32>, ImmLeaf<i32, [{return isInt<8>(Imm);}]> {
+  let ParserMatchClass = SImmAsmOperand<8>;
+  let EncoderMethod = "getImmOpValue";
+  let DecoderMethod = "decodeSImmOperand<8>";
+  let MCOperandPredicate = [{
+    int64_t Imm;
+    if (MCOp.evaluateAsConstantImm(Imm))
+      return isInt<8>(Imm);
+    return MCOp.isBareSymbolRef();
+  }];
+  let OperandType = "OPERAND_SIMM8";
+  let OperandNamespace = "EmberOp";
+}
+
+def simm16 : Operand<i64>, ImmLeaf<i64, [{return isInt<16>(Imm);}]> {
   let ParserMatchClass = SImmAsmOperand<16>;
   let EncoderMethod = "getImmOpValue";
   let DecoderMethod = "decodeSImmOperand<16>";
@@ -32,8 +46,9 @@ def simm16 : Operand<i32>, ImmLeaf<i32, [{return isInt<16>(Imm);}]> {
     return MCOp.isBareSymbolRef();
   }];
   let OperandType = "OPERAND_SIMM16";
-  let OperandNamespace = "SimOp";
+  let OperandNamespace = "EmberOp";
 }
+
 
 //===----------------------------------------------------------------------===//
 // Ember Instructions
