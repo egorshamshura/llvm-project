@@ -1,12 +1,17 @@
+#include "MCTargetDesc/EmberInfo.h"
 #include "Ember.h"
 #include "TargetInfo/EmberTargetInfo.h"
 #include "llvm/MC/MCRegisterInfo.h"
+#include "llvm/MC/MCInstrInfo.h"
 #include "llvm/MC/TargetRegistry.h"
 
 using namespace llvm;
 
 #define GET_REGINFO_MC_DESC
 #include "EmberGenRegisterInfo.inc"
+
+#define GET_INSTRINFO_MC_DESC
+#include "EmberGenInstrInfo.inc"
 
 static MCRegisterInfo *createEmberMCRegisterInfo(const Triple &TT) {
   EMBER_DUMP_MAGENTA
@@ -18,10 +23,18 @@ static MCRegisterInfo *createEmberMCRegisterInfo(const Triple &TT) {
   return X;
 }
 
+static MCInstrInfo *createEmberMCInstrInfo() {
+  EMBER_DUMP_MAGENTA
+  MCInstrInfo *X = new MCInstrInfo();
+  InitEmberMCInstrInfo(X);
+  return X;
+}
+
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeEmberTargetMC() {
   EMBER_DUMP_MAGENTA
   for (Target* target: {&getTheEmber32Target(), &getTheEmber64Target()}) {
     TargetRegistry::RegisterMCRegInfo(*target, createEmberMCRegisterInfo);
+    TargetRegistry::RegisterMCInstrInfo(*target, createEmberMCInstrInfo);
   }
   // Register the MC register info.
 }

@@ -7,4 +7,7 @@
 #define GET_REGINFO_ENUM
 #include "EmberGenRegisterInfo.inc"
 
+#define GET_INSTRINFO_ENUM
+#include "EmberGenInstrInfo.inc"
+
 #endif // LLVM_LIB_TARGET_EMBER_MCTARGETDESC_EMBERMCTARGETDESC_H
