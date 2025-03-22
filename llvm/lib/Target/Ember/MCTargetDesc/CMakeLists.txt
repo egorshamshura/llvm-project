@@ -1,5 +1,6 @@
 add_llvm_component_library(LLVMEmberDesc
    EmberMCTargetDesc.cpp
+   EmberMCAsmInfo.cpp
  
    LINK_COMPONENTS
    MC
