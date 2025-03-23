@@ -5,11 +5,13 @@
 #include "llvm/CodeGen/TargetFrameLowering.h"
 
 namespace llvm {
+class EmberSubtarget;
+
 
 class EmberFrameLowering : public TargetFrameLowering {
 public:
-  explicit EmberFrameLowering()
-      : TargetFrameLowering(TargetFrameLowering::StackGrowsDown, Align(4), 0) {
+  EmberFrameLowering(const EmberSubtarget &STI)
+  : TargetFrameLowering(TargetFrameLowering::StackGrowsDown, Align(4), 0), STI(STI) {
     EMBER_DUMP_GREEN
   }
 
@@ -24,6 +26,9 @@ public:
   /// frame pointer register. For most targets this is true only if the function
   /// has variable sized allocas or if frame pointer elimination is disabled.
   bool hasFPImpl(const MachineFunction &MF) const override { return false; }
+
+private:
+  const EmberSubtarget &STI;
 };
 
 } // namespace llvm

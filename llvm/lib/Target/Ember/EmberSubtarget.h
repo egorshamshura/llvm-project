@@ -2,6 +2,7 @@
 #define LLVM_LIB_TARGET_EMBER_EMBERSUBTARGET_H
 
 #include "Ember.h"
+#include "EmberFrameLowering.h"
 #include "EmberISelLowering.h"
 #include "llvm/CodeGen/TargetSubtargetInfo.h"
 
@@ -9,10 +10,13 @@
 #include "EmberGenSubtargetInfo.inc"
 
 namespace llvm {
+class EmberFrameLowering;
+
 
 class EmberSubtarget : public EmberGenSubtargetInfo {
 public:
   EmberTargetLowering TLInfo;
+  EmberFrameLowering FrameLowering;
 
   EmberSubtarget(const Triple &TT, const std::string &CPU, const std::string &FS,
     const TargetMachine &TM);
@@ -24,6 +28,11 @@ public:
   const EmberTargetLowering *getTargetLowering() const override {
     EMBER_DUMP_CYAN
     return &TLInfo;
+  }
+
+  const EmberFrameLowering *getFrameLowering() const override {
+    EMBER_DUMP_CYAN
+    return &FrameLowering;
   }
 };
 
