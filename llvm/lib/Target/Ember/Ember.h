@@ -1,7 +1,6 @@
 #ifndef LLVM_LIB_TARGET_Ember_Ember_H
 #define LLVM_LIB_TARGET_Ember_Ember_H
 
-#include "EmberTargetMachine.h"
 #include "MCTargetDesc/EmberMCTargetDesc.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Target/TargetMachine.h"
@@ -22,7 +21,7 @@
 #define EMBER_DUMP_WHITE EMBER_DUMP(llvm::raw_ostream::WHITE)
 
 namespace llvm {
-class SimTargetMachine;
+class EmberTargetMachine;
 class FunctionPass;
 
 FunctionPass *createEmberISelDag(EmberTargetMachine &TM, CodeGenOptLevel OptLevel);

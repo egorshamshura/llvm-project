@@ -2,6 +2,7 @@
 #define LLVM_LIB_TARGET_EMBER_SIMTARGETMACHINE_H
 
 #include "llvm/CodeGen/CodeGenTargetMachineImpl.h"
+#include "EmberSubtarget.h"
 #include <optional>
 
 namespace llvm {
@@ -10,6 +11,7 @@ extern Target TheEmberTarget;
 class EmberTargetMachine : public CodeGenTargetMachineImpl {
 public:
     std::unique_ptr<TargetLoweringObjectFile> TLOF;
+    EmberSubtarget Subtarget;
 
     EmberTargetMachine(const Target &T, const Triple &TT, StringRef CPU,
                 StringRef FS, const TargetOptions &Options,
@@ -17,7 +19,12 @@ public:
                 std::optional<CodeModel::Model> CM, CodeGenOptLevel OL,
                 bool JIT);
 
-// Pass Pipeline Configuration
+    const EmberSubtarget *getSubtargetImpl(const Function &) const override {
+        EMBER_DUMP_CYAN
+        return &Subtarget;
+    }
+
+    // Pass Pipeline Configuration
     TargetPassConfig *createPassConfig(PassManagerBase &PM) override;
     TargetLoweringObjectFile *getObjFileLowering() const override;
 };

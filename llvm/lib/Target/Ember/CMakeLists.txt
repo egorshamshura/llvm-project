@@ -17,6 +17,7 @@ add_llvm_target(EmberCodeGen
   EmberSubtarget.cpp
   EmberAsmPrinter.cpp
   EmberISelDagToDag.cpp
+  EmberISelLowering.cpp
 
   LINK_COMPONENTS
   CodeGen

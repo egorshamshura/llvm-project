@@ -22,6 +22,19 @@ enum NodeType : unsigned {
 
 } // namespace EmberISD
 
+class EmberTargetLowering : public TargetLowering {
+public:
+    explicit EmberTargetLowering(const TargetMachine &TM, const EmberSubtarget &STI);
+
+    /// This method returns the name of a target specific DAG node.
+    const char *getTargetNodeName(unsigned Opcode) const override;
+
+    EmberSubtarget const &getSubtarget() const { return STI; }
+
+private:
+    const EmberSubtarget &STI;
+};
+
 } // end namespace llvm
 
 #endif // LLVM_LIB_TARGET_EMBER_EMBERISELLOWERING_H
