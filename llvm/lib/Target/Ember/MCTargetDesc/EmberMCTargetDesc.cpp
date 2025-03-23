@@ -1,6 +1,7 @@
 #include "MCTargetDesc/EmberInfo.h"
 #include "Ember.h"
 #include "EmberMCAsmInfo.h"
+#include "EmberInstPrinter.h"
 #include "TargetInfo/EmberTargetInfo.h"
 #include "llvm/MC/MCDwarf.h"
 #include "llvm/MC/MCRegisterInfo.h"
@@ -56,6 +57,15 @@ static MCAsmInfo *createEmberMCAsmInfo(const MCRegisterInfo &MRI,
   return MAI;
 }
 
+static MCInstPrinter *createEmberMCInstPrinter(const Triple &T,
+                                                unsigned SyntaxVariant,
+                                                const MCAsmInfo &MAI,
+                                                const MCInstrInfo &MII,
+                                                const MCRegisterInfo &MRI) {
+  EMBER_DUMP_MAGENTA
+  return new EmberInstPrinter(MAI, MII, MRI);
+}
+
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeEmberTargetMC() {
   EMBER_DUMP_MAGENTA
   for (Target* target: {&getTheEmber32Target(), &getTheEmber64Target()}) {
@@ -63,5 +73,6 @@ extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeEmberTargetMC() {
     TargetRegistry::RegisterMCRegInfo(*target, createEmberMCRegisterInfo);
     TargetRegistry::RegisterMCInstrInfo(*target, createEmberMCInstrInfo);
     TargetRegistry::RegisterMCSubtargetInfo(*target, createEmberMCSubtargetInfo);
+    TargetRegistry::RegisterMCInstPrinter(*target, createEmberMCInstPrinter);
   }
 }
