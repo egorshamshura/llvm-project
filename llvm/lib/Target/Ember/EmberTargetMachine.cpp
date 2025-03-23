@@ -3,6 +3,7 @@
 #include "TargetInfo/EmberTargetInfo.h"
 #include "llvm/CodeGen/TargetPassConfig.h"
 #include "llvm/MC/TargetRegistry.h"
+#include "llvm/CodeGen/TargetLoweringObjectFileImpl.h"
 #include <optional>
 
 using namespace llvm;
@@ -20,9 +21,9 @@ EmberTargetMachine::EmberTargetMachine(const Target &T, const Triple &TT,
                                 std::optional<Reloc::Model> RM,
                                 std::optional<CodeModel::Model> CM,
                                 CodeGenOptLevel OL, bool JIT)
-    : CodeGenTargetMachineImpl(
-        T, "e-m:e-p:32:32-i8:8:32-i16:16:32-i64:64-n32", TT, CPU, FS, Options,
-        Reloc::Static, getEffectiveCodeModel(CM, CodeModel::Small), OL) {
+    : CodeGenTargetMachineImpl(T, "e-m:e-p:32:32-i8:8:32-i16:16:32-i64:64-n32",
+        TT, CPU, FS, Options, Reloc::Static,
+        getEffectiveCodeModel(CM, CodeModel::Small), OL), TLOF(std::make_unique<TargetLoweringObjectFileELF>()) {
 EMBER_DUMP_CYAN
     initAsmInfo();
 }
@@ -37,7 +38,12 @@ public:
 
     bool addInstSelector() override {
         EMBER_DUMP_CYAN
+        addPass(createEmberISelDag(getSimTargetMachine(), getOptLevel()));
         return false;
+    }
+
+    EmberTargetMachine &getSimTargetMachine() const {
+        return getTM<EmberTargetMachine>();
     }
 };
 
@@ -48,3 +54,7 @@ TargetPassConfig *EmberTargetMachine::createPassConfig(PassManagerBase &PM) {
     return new EmberPassConfig(*this, PM);
 }
 
+TargetLoweringObjectFile *EmberTargetMachine::getObjFileLowering() const {
+    EMBER_DUMP_CYAN
+    return TLOF.get();
+}

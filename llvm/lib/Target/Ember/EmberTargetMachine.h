@@ -9,14 +9,17 @@ extern Target TheEmberTarget;
 
 class EmberTargetMachine : public CodeGenTargetMachineImpl {
 public:
-EmberTargetMachine(const Target &T, const Triple &TT, StringRef CPU,
+    std::unique_ptr<TargetLoweringObjectFile> TLOF;
+
+    EmberTargetMachine(const Target &T, const Triple &TT, StringRef CPU,
                 StringRef FS, const TargetOptions &Options,
                 std::optional<Reloc::Model> RM,
                 std::optional<CodeModel::Model> CM, CodeGenOptLevel OL,
                 bool JIT);
 
 // Pass Pipeline Configuration
-TargetPassConfig *createPassConfig(PassManagerBase &PM) override;
+    TargetPassConfig *createPassConfig(PassManagerBase &PM) override;
+    TargetLoweringObjectFile *getObjFileLowering() const override;
 };
 } // end namespace llvm
 
