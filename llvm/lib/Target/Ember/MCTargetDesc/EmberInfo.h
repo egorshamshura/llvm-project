@@ -7,6 +7,7 @@ namespace llvm {
 
 namespace EmberOp {
 enum OperandType : unsigned {
+  OPERAND_SIMM8 = MCOI::OPERAND_FIRST_TARGET,
   OPERAND_SIMM16 = MCOI::OPERAND_FIRST_TARGET,
 };
 } // namespace EmberOp

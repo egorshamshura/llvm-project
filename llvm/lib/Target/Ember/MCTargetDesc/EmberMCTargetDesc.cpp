@@ -64,5 +64,4 @@ extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeEmberTargetMC() {
     TargetRegistry::RegisterMCInstrInfo(*target, createEmberMCInstrInfo);
     TargetRegistry::RegisterMCSubtargetInfo(*target, createEmberMCSubtargetInfo);
   }
-  // Register the MC register info.
 }

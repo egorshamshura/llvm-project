@@ -1,6 +1,7 @@
 #include "EmberTargetMachine.h"
 #include "Ember.h"
 #include "TargetInfo/EmberTargetInfo.h"
+#include "llvm/CodeGen/TargetPassConfig.h"
 #include "llvm/MC/TargetRegistry.h"
 #include <optional>
 
@@ -25,3 +26,25 @@ EmberTargetMachine::EmberTargetMachine(const Target &T, const Triple &TT,
 EMBER_DUMP_CYAN
     initAsmInfo();
 }
+
+namespace {
+ 
+/// Ember Code Generator Pass Configuration Options.
+class EmberPassConfig : public TargetPassConfig {
+public:
+    EmberPassConfig(EmberTargetMachine &TM, PassManagerBase &PM)
+        : TargetPassConfig(TM, PM) {}
+
+    bool addInstSelector() override {
+        EMBER_DUMP_CYAN
+        return false;
+    }
+};
+
+} // end anonymous namespace
+
+TargetPassConfig *EmberTargetMachine::createPassConfig(PassManagerBase &PM) {
+    EMBER_DUMP_CYAN
+    return new EmberPassConfig(*this, PM);
+}
+
