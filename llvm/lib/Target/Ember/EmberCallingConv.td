@@ -17,7 +17,7 @@ def RetCC_Ember32 : CallingConv<[
 
 def RetCC_Ember64 : CallingConv<[
     // i32 return values
-    CCIfType<[i64, i64], CCAssignToReg<[R9, R10, R11, R12]>>,
+    CCIfType<[i32, i64], CCAssignToReg<[R9, R10, R11, R12]>>,
 
     // Integer values get stored in stack slots that are 4 bytes in
     // size and 4-byte aligned.

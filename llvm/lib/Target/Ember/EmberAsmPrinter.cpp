@@ -38,6 +38,10 @@ void emitInstruction(const MachineInstr *MI) override;
 StringRef getPassName() const override { return "Sim Assembly Printer"; }
 
 bool lowerPseudoInstExpansion(const MachineInstr *MI, MCInst &Inst);
+
+bool lowerOperand(const MachineOperand &MO, MCOperand &MCOp) const {
+    return LowerEmberMachineOperandToMCOperand(MO, MCOp, *this);
+}
 };
 
 } // end anonymous namespace
@@ -53,6 +57,10 @@ void EmberAsmPrinter::emitInstruction(const MachineInstr *MI) {
         EmitToStreamer(*OutStreamer, OutInst);
         return;
     }
+
+    MCInst TmpInst;
+    if (!lowerEmberMachineInstrToMCInst(MI, TmpInst, *this))
+        EmitToStreamer(*OutStreamer, TmpInst);
 }
 
 // Force static initialization.

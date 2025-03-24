@@ -8,6 +8,7 @@ tablegen(LLVM EmberGenSubtargetInfo.inc -gen-subtarget)
 tablegen(LLVM EmberGenMCPseudoLowering.inc -gen-pseudo-lowering)
 tablegen(LLVM EmberGenDAGISel.inc -gen-dag-isel)
 tablegen(LLVM EmberGenCallingConv.inc -gen-callingconv)
+tablegen(LLVM EmberGenAsmWriter.inc -gen-asm-writer)
  
 add_public_tablegen_target(EmberCommonTableGen)
 
@@ -19,6 +20,7 @@ add_llvm_target(EmberCodeGen
   EmberAsmPrinter.cpp
   EmberISelDagToDag.cpp
   EmberISelLowering.cpp
+  EmberMCInstLower.cpp
 
   LINK_COMPONENTS
   CodeGen

@@ -30,7 +30,6 @@ class EmberInstCommon<dag outs, dag ins, string asmstr, list<dag> pattern>: Inst
   let InOperandList  = ins;
   let AsmString   = asmstr;
   let Pattern     = pattern;
-
 }
 
 class EmberInst32<bits<8> op, dag outs, dag ins, string asmstr, list<dag> pattern> 

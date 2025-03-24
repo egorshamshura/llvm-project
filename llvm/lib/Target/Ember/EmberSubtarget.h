@@ -4,7 +4,11 @@
 #include "Ember.h"
 #include "EmberFrameLowering.h"
 #include "EmberISelLowering.h"
+#include "EmberRegisterInfo.h"
+#include "EmberInstrInfo.h"
+#include "llvm/CodeGen/SelectionDAGTargetInfo.h"
 #include "llvm/CodeGen/TargetSubtargetInfo.h"
+#include <iostream>
 
 #define GET_SUBTARGETINFO_HEADER
 #include "EmberGenSubtargetInfo.inc"
@@ -17,6 +21,9 @@ class EmberSubtarget : public EmberGenSubtargetInfo {
 public:
   EmberTargetLowering TLInfo;
   EmberFrameLowering FrameLowering;
+  EmberRegisterInfo RegInfo;
+  EmberInstrInfo InstrInfo;
+  SelectionDAGTargetInfo TSInfo;
 
   EmberSubtarget(const Triple &TT, const std::string &CPU, const std::string &FS,
     const TargetMachine &TM);
@@ -37,6 +44,20 @@ public:
 
   bool is64bit() const {
     return getTargetTriple().getArch() == Triple::ember64;
+  }
+
+  const EmberRegisterInfo *getRegisterInfo() const override {
+    EMBER_DUMP_CYAN
+    return &RegInfo;
+  }
+
+  const EmberInstrInfo *getInstrInfo() const override { 
+    return &InstrInfo; 
+  }
+
+  const SelectionDAGTargetInfo *getSelectionDAGInfo() const override {
+    EMBER_DUMP_CYAN
+    return &TSInfo;
   }
 };
 

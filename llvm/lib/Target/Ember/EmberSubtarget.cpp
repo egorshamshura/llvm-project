@@ -12,6 +12,6 @@ using namespace llvm;
 
 EmberSubtarget::EmberSubtarget(const Triple &TT, const std::string &CPU,
   const std::string &FS, const TargetMachine &TM)
-  : EmberGenSubtargetInfo(TT, CPU, /*TuneCPU=*/CPU, FS), TLInfo(TM, *this), FrameLowering(*this)  {
+  : EmberGenSubtargetInfo(TT, CPU, /*TuneCPU=*/CPU, FS), TLInfo(TM, *this), FrameLowering(*this), RegInfo(TT), InstrInfo()  {
   EMBER_DUMP_CYAN
 }

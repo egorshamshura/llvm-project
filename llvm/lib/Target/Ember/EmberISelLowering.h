@@ -16,7 +16,8 @@ namespace EmberISD {
 enum NodeType : unsigned {
 // Start the numbering where the builtin ops and target ops leave off.
     FIRST_NUMBER = ISD::BUILTIN_OP_END,
-    RET,
+    RET32,
+    RET64,
     CALL,
     BR_CC,
 };

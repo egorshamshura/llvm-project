@@ -23,8 +23,20 @@
 namespace llvm {
 class EmberTargetMachine;
 class FunctionPass;
+class EmberSubtarget;
+class AsmPrinter;
+class InstructionSelector;
+class MCInst;
+class MCOperand;
+class MachineInstr;
+class MachineOperand;
+class PassRegistry;
 
 FunctionPass *createEmberISelDag(EmberTargetMachine &TM, CodeGenOptLevel OptLevel);
+
+
+bool lowerEmberMachineInstrToMCInst(const MachineInstr *MI, MCInst &OutMI, AsmPrinter &AP);
+bool LowerEmberMachineOperandToMCOperand(const MachineOperand &MO, MCOperand &MCOp, const AsmPrinter &AP);
 
 } // namespace llvm
 

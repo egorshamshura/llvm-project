@@ -5,15 +5,15 @@
 using namespace llvm;
 
 Target &llvm::getTheEmber32Target() {
-EMBER_DUMP_YELLOW
-static Target TheEmber32Target;
-return TheEmber32Target;
+  EMBER_DUMP_YELLOW
+  static Target TheEmber32Target;
+  return TheEmber32Target;
 }
 
 Target &llvm::getTheEmber64Target() {
-EMBER_DUMP_YELLOW
-static Target TheEmber64Target;
-return TheEmber64Target;
+  EMBER_DUMP_YELLOW
+  static Target TheEmber64Target;
+  return TheEmber64Target;
 }
 
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeEmberTargetInfo() {

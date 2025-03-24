@@ -11,7 +11,7 @@ class EmberReg32<bits<5> Enc, string n> : Register<n> {
 }
 
 foreach I = 0-31 in {
-  def RH#I : EmberReg32<I, "rh#Ih">;
+  def RH#I : EmberReg32<I, "rh"#I>;
 }
 
 //===----------------------------------------------------------------------===//

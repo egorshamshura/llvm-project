@@ -2,7 +2,10 @@
 // Ember profiles and nodes
 //===----------------------------------------------------------------------===//
 
-def ember_ret      : SDNode<"EmberISD::RET", SDTNone,
+def ember32_ret      : SDNode<"EmberISD::RET32", SDTNone,
+                            [SDNPHasChain, SDNPOptInGlue, SDNPVariadic]>;
+
+def ember64_ret      : SDNode<"EmberISD::RET64", SDTNone,
                             [SDNPHasChain, SDNPOptInGlue, SDNPVariadic]>;
 
 //===----------------------------------------------------------------------===//
@@ -26,7 +29,7 @@ def simm8 : Operand<i32>, ImmLeaf<i32, [{return isInt<8>(Imm);}]> {
   let EncoderMethod = "getImmOpValue";
   let DecoderMethod = "decodeSImmOperand<8>";
   let MCOperandPredicate = [{
-    int64_t Imm;
+    int32_t Imm;
     if (MCOp.evaluateAsConstantImm(Imm))
       return isInt<8>(Imm);
     return MCOp.isBareSymbolRef();
@@ -61,3 +64,23 @@ def BR32 : EmberInst32<0x0, (outs), (ins GPR32:$rs1), "BR $rs1",
 let hasSideEffects = 0, mayLoad = 0, mayStore = 0, isCall = 1, isBranch = 1, isTerminator = 1 in
 def BR64 : EmberInst64<0x0, (outs), (ins GPR64:$rs1), "BR $rs1",
                   [(brind GPR64:$rs1)]>;
+
+let isAsCheapAsAMove = 1, isCodeGenOnly = 1, isReMaterializable = 1 in
+def MOVLI32 : EmberInst32<0x0, (outs GPR32:$rd), (ins simm8:$imm),
+                      "MOVli $rd $imm",
+                      [(set GPR32:$rd, simm8:$imm)]>;
+
+let isAsCheapAsAMove = 1, isCodeGenOnly = 1, isReMaterializable = 1 in
+def MOVLI64 : EmberInst64<0x0, (outs GPR64:$rd), (ins simm16:$imm),
+                      "MOVli $rd $imm",
+                      [(set GPR64:$rd, simm16:$imm)]>;
+
+let isBarrier = 1, isReturn = 1, isTerminator = 1 in
+def PseudoRET32 : EmberPseudoInst32<(outs), (ins), "# PseudoRET",
+                [(ember32_ret)]>,
+                PseudoInstExpansion<(BR32 RH0)>;
+
+let isBarrier = 1, isReturn = 1, isTerminator = 1 in
+def PseudoRET64 : EmberPseudoInst64<(outs), (ins), "# PseudoRET",
+                [(ember64_ret)]>,
+                PseudoInstExpansion<(BR64 R0)>;

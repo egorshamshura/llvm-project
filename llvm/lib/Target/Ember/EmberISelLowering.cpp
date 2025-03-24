@@ -25,6 +25,28 @@ EmberTargetLowering::EmberTargetLowering(const TargetMachine &TM,
     EMBER_DUMP_RED
     addRegisterClass(MVT::i32, &Ember::GPR32RegClass);
     addRegisterClass(MVT::i64, &Ember::GPR64RegClass);
+
+    computeRegisterProperties(STI.getRegisterInfo());
+ 
+    setStackPointerRegisterToSaveRestore(Ember::R1);
+    setStackPointerRegisterToSaveRestore(Ember::RH1);
+    // setSchedulingPreference(Sched::Source);
+  
+    for (unsigned Opc = 0; Opc < ISD::BUILTIN_OP_END; ++Opc)
+      setOperationAction(Opc, MVT::i32, Expand);
+  
+    setOperationAction(ISD::ADD, MVT::i32, Legal);
+    setOperationAction(ISD::MUL, MVT::i32, Legal);
+    // ...
+    setOperationAction(ISD::LOAD, MVT::i32, Legal);
+    setOperationAction(ISD::STORE, MVT::i32, Legal);
+  
+    setOperationAction(ISD::Constant, MVT::i32, Legal);
+    setOperationAction(ISD::UNDEF, MVT::i32, Legal);
+  
+    setOperationAction(ISD::BR_CC, MVT::i32, Custom);
+  
+    setOperationAction(ISD::FRAMEADDR, MVT::i32, Legal);
 }
 
 const char *EmberTargetLowering::getTargetNodeName(unsigned Opcode) const {
@@ -32,7 +54,8 @@ const char *EmberTargetLowering::getTargetNodeName(unsigned Opcode) const {
     switch (Opcode) {
     case EmberISD::CALL:
         return "EmberISD::CALL";
-    case EmberISD::RET:
+    case EmberISD::RET32:
+    case EmberISD::RET64:
         return "EmberISD::RET";
     }
     return nullptr;
@@ -512,6 +535,8 @@ SDValue EmberTargetLowering::LowerReturn(SDValue Chain, CallingConv::ID CallConv
     for (unsigned i = 0, e = RVLocs.size(); i < e; ++i) {
         SDValue Val = OutVals[i];
         CCValAssign &VA = RVLocs[i];
+        std::cout << VA.isRegLoc() << " " << VA.isMemLoc() << " " << VA.isPendingLoc() << '\n';
+        VA.getValVT().print(llvm::outs());
         assert(VA.isRegLoc() && "Can only return in registers!");
 
         Val = convertValVTToLocVT(DAG, Val, VA, DL, STI);
@@ -527,14 +552,14 @@ SDValue EmberTargetLowering::LowerReturn(SDValue Chain, CallingConv::ID CallConv
     if (Glue.getNode()) {
         RetOps.push_back(Glue);
     }
-    return DAG.getNode(EmberISD::RET, DL, MVT::Other, RetOps);
-    }
+    return DAG.getNode(STI.is64bit() ? EmberISD::RET64 : EmberISD::RET32, DL, MVT::Other, RetOps);
+}
 
-    //===----------------------------------------------------------------------===//
-    // Target Optimization Hooks
-    //===----------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
+// Target Optimization Hooks
+//===----------------------------------------------------------------------===//
 
-    SDValue EmberTargetLowering::PerformDAGCombine(SDNode *N, DAGCombinerInfo &DCI) const {
+SDValue EmberTargetLowering::PerformDAGCombine(SDNode *N, DAGCombinerInfo &DCI) const {
     return {};
 }
 
