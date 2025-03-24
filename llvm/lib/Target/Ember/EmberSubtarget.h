@@ -34,6 +34,10 @@ public:
     EMBER_DUMP_CYAN
     return &FrameLowering;
   }
+
+  bool is64bit() const {
+    return getTargetTriple().getArch() == Triple::ember64;
+  }
 };
 
 } // end namespace llvm
