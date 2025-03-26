@@ -58,20 +58,20 @@ def simm16 : Operand<i64>, ImmLeaf<i64, [{return isInt<16>(Imm);}]> {
 //===----------------------------------------------------------------------===//
 
 let hasSideEffects = 0, mayLoad = 0, mayStore = 0, isCall = 1, isBranch = 1, isTerminator = 1 in
-def BR32 : EmberInst32<0x0, (outs), (ins GPR32:$rs1), "BR $rs1",
+def BR32 : EmberInst32<0x1B, (outs), (ins GPR32:$rs1), "BR $rs1",
                   [(brind GPR32:$rs1)]>;
 
 let hasSideEffects = 0, mayLoad = 0, mayStore = 0, isCall = 1, isBranch = 1, isTerminator = 1 in
-def BR64 : EmberInst64<0x0, (outs), (ins GPR64:$rs1), "BR $rs1",
+def BR64 : EmberInst64<0x1B, (outs), (ins GPR64:$rs1), "BR $rs1",
                   [(brind GPR64:$rs1)]>;
 
 let isAsCheapAsAMove = 1, isCodeGenOnly = 1, isReMaterializable = 1 in
-def MOVLI32 : EmberInst32<0x0, (outs GPR32:$rd), (ins simm8:$imm),
+def MOVLI32 : EmberInst32<0x1C, (outs GPR32:$rd), (ins simm8:$imm),
                       "MOVli $rd $imm",
                       [(set GPR32:$rd, simm8:$imm)]>;
 
 let isAsCheapAsAMove = 1, isCodeGenOnly = 1, isReMaterializable = 1 in
-def MOVLI64 : EmberInst64<0x0, (outs GPR64:$rd), (ins simm16:$imm),
+def MOVLI64 : EmberInst64<0x1C, (outs GPR64:$rd), (ins simm16:$imm),
                       "MOVli $rd $imm",
                       [(set GPR64:$rd, simm16:$imm)]>;
 

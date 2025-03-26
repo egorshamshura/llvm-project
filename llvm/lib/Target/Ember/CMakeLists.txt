@@ -9,6 +9,7 @@ tablegen(LLVM EmberGenMCPseudoLowering.inc -gen-pseudo-lowering)
 tablegen(LLVM EmberGenDAGISel.inc -gen-dag-isel)
 tablegen(LLVM EmberGenCallingConv.inc -gen-callingconv)
 tablegen(LLVM EmberGenAsmWriter.inc -gen-asm-writer)
+tablegen(LLVM EmberGenMCCodeEmitter.inc -gen-emitter)
  
 add_public_tablegen_target(EmberCommonTableGen)
 

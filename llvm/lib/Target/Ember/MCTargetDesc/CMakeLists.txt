@@ -2,6 +2,8 @@ add_llvm_component_library(LLVMEmberDesc
    EmberMCTargetDesc.cpp
    EmberMCAsmInfo.cpp
    EmberInstPrinter.cpp
+   EmberMCCodeEmitter.cpp
+   EmberAsmBackend.cpp
  
    LINK_COMPONENTS
    MC

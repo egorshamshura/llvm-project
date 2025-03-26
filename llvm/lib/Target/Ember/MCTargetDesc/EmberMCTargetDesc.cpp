@@ -74,5 +74,7 @@ extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeEmberTargetMC() {
     TargetRegistry::RegisterMCInstrInfo(*target, createEmberMCInstrInfo);
     TargetRegistry::RegisterMCSubtargetInfo(*target, createEmberMCSubtargetInfo);
     TargetRegistry::RegisterMCInstPrinter(*target, createEmberMCInstPrinter);
+    TargetRegistry::RegisterMCCodeEmitter(*target, createEmberMCCodeEmitter);
+    TargetRegistry::RegisterMCAsmBackend(*target, createEmberAsmBackend);
   }
 }

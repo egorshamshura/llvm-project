@@ -30,5 +30,6 @@ In 32bit and 64bit modes there are 32 registers: R0-R31 (64bit) and RH0-RH31 (32
 | RAND32 x1              | 1 reg          | x1 = rand()     in 32bit     | 00011000 |       |  
 | DUMP x1                | 1 reg          | writes in console x1         | 00011001 |       | 
 | FLUSH                  | 0 reg          | simFlush()                   | 00011010 |       | 
-| BR_COND x1 label       | 1 reg, 1 label | if (x1) nextPC = label       | 00011011 |       | 
-| EXIT                   | 0 reg          | returns void from func       | 00011100 |       | 
+| BR label               | 1 label        | nextPC = label               | 00011011 |       | 
+| BR_COND x1 label                | 1 reg, 1 label | if (x1) nextPC = label       | 00011100 |       | 
+| EXIT                   | 0 reg          | returns void from func       | 00011101 |       | 
