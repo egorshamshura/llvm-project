@@ -35,7 +35,7 @@ explicit EmberAsmPrinter(TargetMachine &TM,
 
 void emitInstruction(const MachineInstr *MI) override;
 
-StringRef getPassName() const override { return "Sim Assembly Printer"; }
+StringRef getPassName() const override { return "Ember Assembly Printer"; }
 
 bool lowerPseudoInstExpansion(const MachineInstr *MI, MCInst &Inst);
 

@@ -39,11 +39,11 @@ public:
 
     bool addInstSelector() override {
         EMBER_DUMP_CYAN
-        addPass(createEmberISelDag(getSimTargetMachine(), getOptLevel()));
+        addPass(createEmberISelDag(getEmberTargetMachine(), getOptLevel()));
         return false;
     }
 
-    EmberTargetMachine &getSimTargetMachine() const {
+    EmberTargetMachine &getEmberTargetMachine() const {
         return getTM<EmberTargetMachine>();
     }
 };

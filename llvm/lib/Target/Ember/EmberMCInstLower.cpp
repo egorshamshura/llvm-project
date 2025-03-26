@@ -28,7 +28,7 @@ static MCOperand lowerSymbolOperand(const MachineOperand &MO, MCSymbol *Sym, con
 bool llvm::LowerEmberMachineOperandToMCOperand(const MachineOperand &MO, MCOperand &MCOp, const AsmPrinter &AP) {
     switch (MO.getType()) {
     default:
-        report_fatal_error("LowerSimMachineInstrToMCInst: unknown operand type");
+        report_fatal_error("LowerEmberMachineInstrToMCInst: unknown operand type");
     case MachineOperand::MO_Register:
         // Ignore all implicit register operands.
         if (MO.isImplicit())
