@@ -69,8 +69,6 @@ void EmberMCCodeEmitter::encodeInstruction(const MCInst &MI,
                                         SmallVectorImpl<MCFixup> &Fixups,
                                         const MCSubtargetInfo &STI) const {
   uint64_t Bits = getBinaryCodeForInstr(MI, Fixups, STI);
-  llvm::outs() << "MI Opcode: " << MI.getOpcode() << "\n";
-  llvm::outs() << "Bits: " << Bits << "\n";
   support::endian::write(CB, Bits, llvm::endianness::little);
 
   ++MCNumEmitted; // Keep track of the # of mi's emitted.

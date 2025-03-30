@@ -534,8 +534,6 @@ SDValue EmberTargetLowering::LowerReturn(SDValue Chain, CallingConv::ID CallConv
     for (unsigned i = 0, e = RVLocs.size(); i < e; ++i) {
         SDValue Val = OutVals[i];
         CCValAssign &VA = RVLocs[i];
-        std::cout << VA.isRegLoc() << " " << VA.isMemLoc() << " " << VA.isPendingLoc() << '\n';
-        VA.getValVT().print(llvm::outs());
         assert(VA.isRegLoc() && "Can only return in registers!");
 
         Val = convertValVTToLocVT(DAG, Val, VA, DL, STI);
