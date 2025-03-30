@@ -54,6 +54,9 @@ public:
   unsigned getMachineOpValue(const MCInst &MI, const MCOperand &MO,
                             SmallVectorImpl<MCFixup> &Fixups,
                             const MCSubtargetInfo &STI) const;
+  unsigned getSImm8OpValue(const MCInst &MI, unsigned OpNo,
+                            SmallVectorImpl<MCFixup> &Fixups,
+                            const MCSubtargetInfo &STI) const;
   unsigned getSImm16OpValue(const MCInst &MI, unsigned OpNo,
                             SmallVectorImpl<MCFixup> &Fixups,
                             const MCSubtargetInfo &STI) const;
@@ -65,7 +68,9 @@ void EmberMCCodeEmitter::encodeInstruction(const MCInst &MI,
                                         SmallVectorImpl<char> &CB,
                                         SmallVectorImpl<MCFixup> &Fixups,
                                         const MCSubtargetInfo &STI) const {
-  unsigned Bits = getBinaryCodeForInstr(MI, Fixups, STI);
+  uint64_t Bits = getBinaryCodeForInstr(MI, Fixups, STI);
+  llvm::outs() << "MI Opcode: " << MI.getOpcode() << "\n";
+  llvm::outs() << "Bits: " << Bits << "\n";
   support::endian::write(CB, Bits, llvm::endianness::little);
 
   ++MCNumEmitted; // Keep track of the # of mi's emitted.
@@ -89,6 +94,25 @@ unsigned EmberMCCodeEmitter::getMachineOpValue(const MCInst &MI,
     return Res;
 
   llvm_unreachable("Unhandled expression!");
+  return 0;
+}
+
+unsigned EmberMCCodeEmitter::getSImm8OpValue(const MCInst &MI, unsigned OpNo,
+                                            SmallVectorImpl<MCFixup> &Fixups,
+                                            const MCSubtargetInfo &STI) const {
+  const MCOperand &MO = MI.getOperand(OpNo);
+  if (MO.isImm())
+    return MO.getImm();
+
+  assert(MO.isExpr() &&
+        "getSImm8OpValue expects only expressions or an immediate");
+
+  const MCExpr *Expr = MO.getExpr();
+
+  // Constant value, no fixup is needed
+  if (const MCConstantExpr *CE = dyn_cast<MCConstantExpr>(Expr))
+    return CE->getValue();
+
   return 0;
 }
 

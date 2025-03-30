@@ -8,7 +8,7 @@ EmberELFMCAsmInfo::EmberELFMCAsmInfo(const Triple &TT) {
   SupportsDebugInformation = false;
   Data16bitsDirective = "\t.short\t";
   Data32bitsDirective = "\t.word\t";
-  Data64bitsDirective = nullptr;
+  Data64bitsDirective = "\t.quad\t";
   ZeroDirective = "\t.space\t";
   CommentString = ";";
 

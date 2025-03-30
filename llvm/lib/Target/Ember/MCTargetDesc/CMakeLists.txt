@@ -4,6 +4,7 @@ add_llvm_component_library(LLVMEmberDesc
    EmberInstPrinter.cpp
    EmberMCCodeEmitter.cpp
    EmberAsmBackend.cpp
+   EmberELFObjectWriter.cpp
  
    LINK_COMPONENTS
    MC

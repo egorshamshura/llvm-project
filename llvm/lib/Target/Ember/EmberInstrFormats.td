@@ -8,14 +8,13 @@
 //     ^        - r1     - first  reg
 //  ^^          - opcode - operation code
 //
-// Description Ember instruction format 64 bit:
+// Description Ember instructAion format 64 bit:
 //
-//  00 XX XX XX XX XX XX XX
+//  XX XX XX XX XX XX XX XX
 //                    ^^ ^^ - r3_imm - third  reg or imm
 //                  ^       - r2_imm - second reg or imm
 //            ^             - r1     - first  reg
-//     ^^                   - opcode - operation code
-//  ^^                      - always 00
+//  ^^ ^^                   - opcode - operation code
 //===----------------------------------------------------------------------===//
 // Ember Instruction Format Definitions.
 //
@@ -37,9 +36,9 @@ class EmberInst32<bits<8> op, dag outs, dag ins, string asmstr, list<dag> patter
   let Size = 4;
   field bits<32> Inst;
   bits<8> Opcode = op;
-  bits<8> r1     = 0;
-  bits<8> r2_imm = 0;
-  bits<8> r3_imm = 0;
+  bits<8> r1;
+  bits<8> r2_imm;
+  bits<8> r3_imm;
 
   let Inst{31-24} = Opcode;
   let Inst{23-16} = r1;
@@ -53,9 +52,9 @@ class EmberInst64<bits<16> op, dag outs, dag ins, string asmstr, list<dag> patte
   field bits<64> Inst;
 
   bits<16> Opcode = op;
-  bits<16> r1     = 0;
-  bits<16> r2_imm = 0;
-  bits<16> r3_imm = 0;
+  bits<16> r1;
+  bits<16> r2_imm;
+  bits<16> r3_imm;
 
   let Inst{63-48} = Opcode;
   let Inst{47-32} = r1;

@@ -1318,6 +1318,8 @@ StringRef ELFObjectFile<ELFT>::getFileFormatName() const {
       return "elf32-loongarch";
     case ELF::EM_XTENSA:
       return "elf32-xtensa";
+    case ELF::EM_EMBER32:
+      return "elf32-ember";
     default:
       return "elf32-unknown";
     }
@@ -1347,6 +1349,8 @@ StringRef ELFObjectFile<ELFT>::getFileFormatName() const {
       return "elf64-ve";
     case ELF::EM_LOONGARCH:
       return "elf64-loongarch";
+    case ELF::EM_EMBER64:
+      return "elf64-ember";
     default:
       return "elf64-unknown";
     }
@@ -1376,6 +1380,10 @@ template <class ELFT> Triple::ArchType ELFObjectFile<ELFT>::getArch() const {
     return Triple::hexagon;
   case ELF::EM_LANAI:
     return Triple::lanai;
+  case ELF::EM_EMBER32:
+    return Triple::ember32;
+  case ELF::EM_EMBER64:
+  return Triple::ember64;
   case ELF::EM_MIPS:
     switch (EF.getHeader().e_ident[ELF::EI_CLASS]) {
     case ELF::ELFCLASS32:

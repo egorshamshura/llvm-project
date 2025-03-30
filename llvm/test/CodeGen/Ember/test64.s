@@ -4,8 +4,8 @@
 	.type	main,@function
 main:                                   ; @main
 ; %bb.0:
-	MOVli r9 12
-	BR r0
+	MOVli64 r9 12
+	BR64 r0
 .Lfunc_end0:
 	.size	main, .Lfunc_end0-main
                                         ; -- End function

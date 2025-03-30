@@ -23,8 +23,7 @@ EmberTargetLowering::EmberTargetLowering(const TargetMachine &TM,
                                     const EmberSubtarget &STI)
     : TargetLowering(TM), STI(STI) {
     EMBER_DUMP_RED
-    addRegisterClass(MVT::i32, &Ember::GPR32RegClass);
-    addRegisterClass(MVT::i64, &Ember::GPR64RegClass);
+    addRegisterClass(STI.is64bit() ? MVT::i64 : MVT::i32, STI.is64bit() ? &Ember::GPR64RegClass : &Ember::GPR32RegClass);
 
     computeRegisterProperties(STI.getRegisterInfo());
  
@@ -33,20 +32,20 @@ EmberTargetLowering::EmberTargetLowering(const TargetMachine &TM,
     // setSchedulingPreference(Sched::Source);
   
     for (unsigned Opc = 0; Opc < ISD::BUILTIN_OP_END; ++Opc)
-      setOperationAction(Opc, MVT::i32, Expand);
+      setOperationAction(Opc, STI.is64bit() ? MVT::i64 : MVT::i32, Expand);
   
-    setOperationAction(ISD::ADD, MVT::i32, Legal);
-    setOperationAction(ISD::MUL, MVT::i32, Legal);
+    setOperationAction(ISD::ADD, STI.is64bit() ? MVT::i64 : MVT::i32, Legal);
+    setOperationAction(ISD::MUL, STI.is64bit() ? MVT::i64 : MVT::i32, Legal);
     // ...
-    setOperationAction(ISD::LOAD, MVT::i32, Legal);
-    setOperationAction(ISD::STORE, MVT::i32, Legal);
+    setOperationAction(ISD::LOAD, STI.is64bit() ? MVT::i64 : MVT::i32, Legal);
+    setOperationAction(ISD::STORE, STI.is64bit() ? MVT::i64 : MVT::i32, Legal);
   
-    setOperationAction(ISD::Constant, MVT::i32, Legal);
-    setOperationAction(ISD::UNDEF, MVT::i32, Legal);
+    setOperationAction(ISD::Constant, STI.is64bit() ? MVT::i64 : MVT::i32, Legal);
+    setOperationAction(ISD::UNDEF, STI.is64bit() ? MVT::i64 : MVT::i32, Legal);
   
-    setOperationAction(ISD::BR_CC, MVT::i32, Custom);
+    setOperationAction(ISD::BR_CC, STI.is64bit() ? MVT::i64 : MVT::i32, Custom);
   
-    setOperationAction(ISD::FRAMEADDR, MVT::i32, Legal);
+    setOperationAction(ISD::FRAMEADDR, STI.is64bit() ? MVT::i64 : MVT::i32, Legal);
 }
 
 const char *EmberTargetLowering::getTargetNodeName(unsigned Opcode) const {
@@ -115,7 +114,7 @@ SDValue EmberTargetLowering::LowerCall(TargetLowering::CallLoweringInfo &CLI, Sm
         int FI =
             MF.getFrameInfo().CreateStackObject(Size, Alignment, /*isSS=*/false);
         SDValue FIPtr = DAG.getFrameIndex(FI, getPointerTy(DAG.getDataLayout()));
-        SDValue SizeNode = DAG.getConstant(Size, DL, MVT::i32);
+        SDValue SizeNode = DAG.getConstant(Size, DL, STI.is64bit() ? MVT::i64 : MVT::i32);
 
         Chain = DAG.getMemcpy(Chain, DL, FIPtr, Arg, SizeNode, Alignment,
                             /*IsVolatile=*/false,
@@ -306,7 +305,7 @@ static SDValue convertValVTToLocVT(SelectionDAG &DAG, SDValue Val,
         break;
     }
     return Val;
-    }
+}
 
     // Convert Val to a ValVT. Should not be called for CCValAssign::Indirect
     // values.
@@ -331,49 +330,49 @@ static SDValue convertValVTToLocVT(SelectionDAG &DAG, SDValue Val,
     static SDValue unpackFromRegLoc(SelectionDAG &DAG, SDValue Chain,
                                     const CCValAssign &VA, const SDLoc &DL,
                                     const EmberTargetLowering &TLI) {
-    MachineFunction &MF = DAG.getMachineFunction();
-    MachineRegisterInfo &RegInfo = MF.getRegInfo();
-    EVT LocVT = VA.getLocVT();
-    SDValue Val;
-    const TargetRegisterClass *RC = TLI.getRegClassFor(LocVT.getSimpleVT());
-    Register VReg = RegInfo.createVirtualRegister(RC);
-    RegInfo.addLiveIn(VA.getLocReg(), VReg);
-    Val = DAG.getCopyFromReg(Chain, DL, VReg, LocVT);
+        MachineFunction &MF = DAG.getMachineFunction();
+        MachineRegisterInfo &RegInfo = MF.getRegInfo();
+        EVT LocVT = VA.getLocVT();
+        SDValue Val;
+        const TargetRegisterClass *RC = TLI.getRegClassFor(LocVT.getSimpleVT());
+        Register VReg = RegInfo.createVirtualRegister(RC);
+        RegInfo.addLiveIn(VA.getLocReg(), VReg);
+        Val = DAG.getCopyFromReg(Chain, DL, VReg, LocVT);
 
-    if (VA.getLocInfo() == CCValAssign::Indirect)
-        return Val;
+        if (VA.getLocInfo() == CCValAssign::Indirect)
+            return Val;
 
-    return convertLocVTToValVT(DAG, Val, VA, DL, TLI.getSubtarget());
+        return convertLocVTToValVT(DAG, Val, VA, DL, TLI.getSubtarget());
     }
 
     // The caller is responsible for loading the full value if the argument is
     // passed with CCValAssign::Indirect.
     static SDValue unpackFromMemLoc(SelectionDAG &DAG, SDValue Chain,
                                     const CCValAssign &VA, const SDLoc &DL) {
-    MachineFunction &MF = DAG.getMachineFunction();
-    MachineFrameInfo &MFI = MF.getFrameInfo();
-    EVT LocVT = VA.getLocVT();
-    EVT ValVT = VA.getValVT();
-    EVT PtrVT = MVT::getIntegerVT(DAG.getDataLayout().getPointerSizeInBits(0));
-    int FI = MFI.CreateFixedObject(ValVT.getStoreSize(), VA.getLocMemOffset(),
-                                    /*IsImmutable=*/true);
-    SDValue FIN = DAG.getFrameIndex(FI, PtrVT);
-    SDValue Val;
+        MachineFunction &MF = DAG.getMachineFunction();
+        MachineFrameInfo &MFI = MF.getFrameInfo();
+        EVT LocVT = VA.getLocVT();
+        EVT ValVT = VA.getValVT();
+        EVT PtrVT = MVT::getIntegerVT(DAG.getDataLayout().getPointerSizeInBits(0));
+        int FI = MFI.CreateFixedObject(ValVT.getStoreSize(), VA.getLocMemOffset(),
+                                        /*IsImmutable=*/true);
+        SDValue FIN = DAG.getFrameIndex(FI, PtrVT);
+        SDValue Val;
 
-    ISD::LoadExtType ExtType;
-    switch (VA.getLocInfo()) {
-    default:
-        llvm_unreachable("Unexpected CCValAssign::LocInfo");
-    case CCValAssign::Full:
-    case CCValAssign::Indirect:
-    case CCValAssign::BCvt:
-        ExtType = ISD::NON_EXTLOAD;
-        break;
-    }
-    Val = DAG.getExtLoad(
-        ExtType, DL, LocVT, Chain, FIN,
-        MachinePointerInfo::getFixedStack(DAG.getMachineFunction(), FI), ValVT);
-    return Val;
+        ISD::LoadExtType ExtType;
+        switch (VA.getLocInfo()) {
+        default:
+            llvm_unreachable("Unexpected CCValAssign::LocInfo");
+        case CCValAssign::Full:
+        case CCValAssign::Indirect:
+        case CCValAssign::BCvt:
+            ExtType = ISD::NON_EXTLOAD;
+            break;
+        }
+        Val = DAG.getExtLoad(
+            ExtType, DL, LocVT, Chain, FIN,
+            MachinePointerInfo::getFixedStack(DAG.getMachineFunction(), FI), ValVT);
+        return Val;
     }
 
     /// Ember formal arguments implementation
@@ -392,7 +391,7 @@ static SDValue convertValVTToLocVT(SelectionDAG &DAG, SDValue Val,
 
     MachineFunction &MF = DAG.getMachineFunction();
     EVT PtrVT = getPointerTy(DAG.getDataLayout());
-    unsigned StackSlotSize = MVT(MVT::i32).getSizeInBits() / 8;
+    unsigned StackSlotSize = MVT(STI.is64bit() ? MVT::i64 : MVT::i32).getSizeInBits() / 8;
     // Used with vargs to acumulate store chains.
     std::vector<SDValue> OutChains;
 
@@ -442,11 +441,11 @@ static SDValue convertValVTToLocVT(SelectionDAG &DAG, SDValue Val,
         // If all registers are allocated, then all varargs must be passed on the
         // stack and we don't need to save any argregs.
         if (ArgRegs.size() == Idx) {
-        VaArgOffset = CCInfo.getStackSize();
-        VarArgsSaveSize = 0;
+            VaArgOffset = CCInfo.getStackSize();
+            VarArgsSaveSize = 0;
         } else {
-        VarArgsSaveSize = StackSlotSize * (ArgRegs.size() - Idx);
-        VaArgOffset = -VarArgsSaveSize;
+            VarArgsSaveSize = StackSlotSize * (ArgRegs.size() - Idx);
+            VaArgOffset = -VarArgsSaveSize;
         }
 
         // Record the frame index of the first variable argument
@@ -469,7 +468,7 @@ static SDValue convertValVTToLocVT(SelectionDAG &DAG, SDValue Val,
             ++I, VaArgOffset += StackSlotSize) {
         const Register Reg = RegInfo.createVirtualRegister(RC);
         RegInfo.addLiveIn(ArgRegs[I], Reg);
-        SDValue ArgValue = DAG.getCopyFromReg(Chain, DL, Reg, MVT::i32);
+        SDValue ArgValue = DAG.getCopyFromReg(Chain, DL, Reg, STI.is64bit() ? MVT::i64 : MVT::i32);
         FI = MFI.CreateFixedObject(StackSlotSize, VaArgOffset, true);
         SDValue PtrOff = DAG.getFrameIndex(FI, getPointerTy(DAG.getDataLayout()));
         SDValue Store = DAG.getStore(Chain, DL, ArgValue, PtrOff,

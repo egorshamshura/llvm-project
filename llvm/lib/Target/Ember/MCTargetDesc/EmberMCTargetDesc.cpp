@@ -23,7 +23,7 @@ using namespace llvm;
 
 static MCRegisterInfo *createEmberMCRegisterInfo(const Triple &TT) {
   EMBER_DUMP_MAGENTA
-  unsigned RA = (TT.getArch() == Triple::x86_64)
+  unsigned RA = (TT.getArch() == Triple::ember64)
                     ? Ember::R0
                     : Ember::RH0;
   MCRegisterInfo *X = new MCRegisterInfo();
@@ -49,7 +49,7 @@ static MCAsmInfo *createEmberMCAsmInfo(const MCRegisterInfo &MRI,
                                     const MCTargetOptions &Options) {
   EMBER_DUMP_MAGENTA
   MCAsmInfo *MAI = new EmberELFMCAsmInfo(TT);
-  unsigned SP = MRI.getDwarfRegNum(((TT.getArch() == Triple::x86_64)
+  unsigned SP = MRI.getDwarfRegNum(((TT.getArch() == Triple::ember64)
                     ? Ember::R1
                     : Ember::RH1), true);
   MCCFIInstruction Inst = MCCFIInstruction::cfiDefCfa(nullptr, SP, 0);
@@ -75,6 +75,7 @@ extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeEmberTargetMC() {
     TargetRegistry::RegisterMCSubtargetInfo(*target, createEmberMCSubtargetInfo);
     TargetRegistry::RegisterMCInstPrinter(*target, createEmberMCInstPrinter);
     TargetRegistry::RegisterMCCodeEmitter(*target, createEmberMCCodeEmitter);
-    TargetRegistry::RegisterMCAsmBackend(*target, createEmberAsmBackend);
   }
+  TargetRegistry::RegisterMCAsmBackend(getTheEmber32Target(), createEmber32AsmBackend);
+  TargetRegistry::RegisterMCAsmBackend(getTheEmber64Target(), createEmber64AsmBackend);
 }

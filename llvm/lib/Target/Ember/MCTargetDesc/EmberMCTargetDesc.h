@@ -1,6 +1,7 @@
 #ifndef LLVM_LIB_TARGET_EMBER_MCTARGETDESC_EMBERMCTARGETDESC_H
 #define LLVM_LIB_TARGET_EMBER_MCTARGETDESC_EMBERMCTARGETDESC_H
 
+#include <memory>
 namespace llvm {
 class MCCodeEmitter;
 class MCContext;
@@ -13,7 +14,9 @@ class MCTargetOptions;
 class Target;
 
 MCCodeEmitter *createEmberMCCodeEmitter(const MCInstrInfo &MCII, MCContext &Ctx);
-MCAsmBackend *createEmberAsmBackend(const Target &T, const MCSubtargetInfo &STI, const MCRegisterInfo &MRI, const MCTargetOptions &Options);
+MCAsmBackend *createEmber32AsmBackend(const Target &T, const MCSubtargetInfo &STI, const MCRegisterInfo &MRI, const MCTargetOptions &Options);
+MCAsmBackend *createEmber64AsmBackend(const Target &T, const MCSubtargetInfo &STI, const MCRegisterInfo &MRI, const MCTargetOptions &Options);
+std::unique_ptr<MCObjectTargetWriter> createEmberELFObjectWriter(bool Is64Bit, uint8_t OSABI);
 } // namespace llvm
  
 
