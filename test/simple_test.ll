@@ -6,7 +6,7 @@ target triple = "ember32"
 ; Function Attrs: mustprogress noinline nounwind optnone
 define dso_local void @_Z3appv() #0 {
 entry:
-  call void @llvm.ember.putpixel(i32 5, i32 5, i32 -1)
+  call void @llvm.ember.putpixel(i32 51, i32 51, i32 -1)
   call void @llvm.ember.flush()
   ret void
 }

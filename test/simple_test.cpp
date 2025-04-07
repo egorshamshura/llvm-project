@@ -1,4 +1,4 @@
 void app() {
-  emberPutPixel(5, 5, 0xFFFFFFFF);
+  emberPutPixel(51, 51, 0xFFFFFFFF);
   emberFlush();
 }
