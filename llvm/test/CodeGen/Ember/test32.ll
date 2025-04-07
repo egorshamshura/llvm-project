@@ -6,3 +6,4 @@ define dso_local i32 @main() {
 
 declare void @llvm.ember.putpixel(i32, i32, i32)
 declare void @llvm.ember.flush()
+declare i32 @llvm.ember.rand()

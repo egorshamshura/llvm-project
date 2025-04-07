@@ -6,4 +6,7 @@ let TargetPrefix = "ember" in {  // All intrinsics start with "llvm.ember.".
   def int_ember_flush: ClangBuiltin<"emberFlush">,
     Intrinsic<[], [], [IntrNoMem, IntrHasSideEffects]>;
 
+  def int_ember_rand: ClangBuiltin<"emberRand">,
+    Intrinsic<[], [llvm_ptr_ty], [IntrHasSideEffects]>;
+
 } // TargetPrefix = "ember"
