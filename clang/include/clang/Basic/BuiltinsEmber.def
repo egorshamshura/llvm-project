@@ -1,0 +1,4 @@
+BUILTIN(emberPutPixel, "vUiUiUi", "nc")
+BUILTIN(emberFlush, "v", "nc")
+
+#undef BUILTIN
