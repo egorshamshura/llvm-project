@@ -84,3 +84,14 @@ let isBarrier = 1, isReturn = 1, isTerminator = 1 in
 def PseudoRET64 : EmberPseudoInst64<(outs), (ins), "# PseudoRET",
                 [(ember64_ret)]>,
                 PseudoInstExpansion<(BR64 R0)>;
+
+// flush
+let r1 = 0, r2_imm = 0, r3_imm = 0 in
+def FLUSH32 : EmberInst32<0xFF, (outs), (ins), "FLUSH", [(int_ember_flush)]>;
+
+let r1 = 0, r2_imm = 0, r3_imm = 0 in
+def FLUSH64 : EmberInst64<0xFF, (outs), (ins), "FLUSH", [(int_ember_flush)]>;
+
+// putpixel
+def PUTPIXEL32 : EmberInst32<0xEE, (outs), (ins GPR32:$r1, GPR32:$r2_imm, GPR32:$r3_imm),
+                      "PUTPIXEL $r1 $r2_imm $r3_imm", [(int_ember_putpixel GPR32:$r1, GPR32:$r2_imm, GPR32:$r3_imm)]>;
