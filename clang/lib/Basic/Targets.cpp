@@ -32,6 +32,7 @@
 #include "Targets/PNaCl.h"
 #include "Targets/PPC.h"
 #include "Targets/RISCV.h"
+#include "Targets/Ember.h"
 #include "Targets/SPIR.h"
 #include "Targets/Sparc.h"
 #include "Targets/SystemZ.h"
@@ -439,6 +440,12 @@ std::unique_ptr<TargetInfo> AllocateTarget(const llvm::Triple &Triple,
     default:
       return std::make_unique<RISCV32TargetInfo>(Triple, Opts);
     }
+
+  case llvm::Triple::ember32:
+     return std::make_unique<Ember32TargetInfo>(Triple, Opts);
+  
+  case llvm::Triple::ember64:
+     return std::make_unique<Ember64TargetInfo>(Triple, Opts);
 
   case llvm::Triple::riscv64:
     switch (os) {
